@@ -1,0 +1,150 @@
+.edu {
+    background: var(--c-bg);
+}
+
+.title {
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.0;
+    margin-bottom: 56px;
+}
+
+.outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    color: transparent;
+}
+
+/* ── Degree row ─────────────────────── */
+.degRow {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    padding: 40px 0;
+    border-top: 1px solid var(--c-border);
+    border-bottom: 1px solid var(--c-border);
+    margin-bottom: 72px;
+}
+
+.degLeft {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.period {
+    font-family: var(--font-m);
+    font-size: 0.72rem;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+}
+
+.short {
+    font-family: var(--font-h);
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--c-accent);
+    letter-spacing: -0.02em;
+}
+
+.degBody {
+    flex: 1;
+}
+
+.degree {
+    font-family: var(--font-h);
+    font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-1);
+    margin-bottom: 8px;
+    line-height: 1.25;
+}
+
+.institution {
+    font-size: 0.9rem;
+    color: var(--text-2);
+    margin-bottom: 20px;
+}
+
+.highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    font-family: var(--font-b);
+    font-size: 0.78rem;
+    color: var(--text-2);
+    border: 1px solid var(--c-border);
+    padding: 4px 14px;
+    border-radius: var(--r-sm);
+}
+
+/* ── Cert list ─────────────────────── */
+.certList {
+    list-style: none;
+}
+
+.certRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--c-border);
+    transition: padding-left 0.25s, background 0.25s;
+}
+
+.certRow:first-child {
+    border-top: 1px solid var(--c-border);
+}
+
+.certRow:hover {
+    padding-left: 8px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.certBody {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.certCheck {
+    font-family: var(--font-m);
+    font-size: 0.75rem;
+    color: var(--c-accent);
+    flex-shrink: 0;
+}
+
+.certName {
+    font-family: var(--font-h);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-1);
+    letter-spacing: -0.01em;
+}
+
+.certMeta {
+    font-family: var(--font-m);
+    font-size: 0.72rem;
+    color: var(--text-3);
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .degRow {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .certRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

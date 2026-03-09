@@ -1,0 +1,375 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+/* ═══════════════════════════ DESIGN TOKENS ════════════════════════════ */
+:root {
+  --c-bg: #F0F8FF;
+  /* Alice Blue */
+  --c-bg2: #E4F1FC;
+  /* slightly deeper Alice Blue surface */
+  --c-surface: rgba(255, 255, 255, 0.70);
+  /* white glass overlay */
+  --c-surface2: rgba(255, 255, 255, 0.90);
+  /* stronger white glass */
+  --c-border: rgba(74, 144, 217, 0.18);
+  /* blue-tinted subtle border */
+  --c-border2: rgba(74, 144, 217, 0.35);
+  /* stronger blue border */
+
+  /* Tri-color accent palette */
+  --c-accent: #4A90D9;
+  /* Icy Blue / Sapphire  — primary   */
+  --c-accent2: #2ECC8A;
+  /* Emerald / Jade Green — secondary */
+  --c-accent3: #C49A3C;
+  /* Hazel                — tertiary  */
+
+  --text-1: #051533;
+  /* very deep navy blue */
+  --text-2: rgba(5, 21, 51, 0.72);
+  /* medium deep navy */
+  --text-3: rgba(5, 21, 51, 0.46);
+  /* soft deep navy */
+
+  --font-h: 'DM Sans', sans-serif;
+  --font-b: 'Space Grotesk', sans-serif;
+  --font-m: 'Fira Code', monospace;
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-full: 9999px;
+
+  --shadow-sm: 0 2px 12px rgba(74, 144, 217, 0.10);
+  --shadow-md: 0 8px 32px rgba(74, 144, 217, 0.15);
+  --shadow-lg: 0 24px 64px rgba(74, 144, 217, 0.20);
+  --glow-accent: 0 0 40px rgba(74, 144, 217, 0.28);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --nav-h: 64px;
+  --bottom-bar-h: 52px;
+  --sect-py: clamp(80px, 10vw, 140px);
+  --wrap: 1280px;
+  --px: clamp(24px, 6vw, 80px);
+}
+
+/* ═══════════════════════════ RESET ════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-b);
+  background: var(--c-bg);
+  color: var(--text-1);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-h);
+  line-height: 1.05;
+  color: var(--text-1);
+  letter-spacing: -0.03em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: var(--font-b);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--c-accent);
+  border-radius: 2px;
+}
+
+:focus-visible {
+  outline: 1px solid var(--c-accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════ LAYOUT ═══════════════════════════════════ */
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 var(--px);
+}
+
+.section {
+  padding: var(--sect-py) 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════ SECTION HEADER ═══════════════════════════ */
+.s-label {
+  font-family: var(--font-m);
+  font-size: 0.72rem;
+  color: var(--text-2);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+
+.s-label::after {
+  content: '';
+  display: block;
+  height: 1px;
+  flex: 1;
+  background: var(--c-border);
+}
+
+.s-num {
+  font-family: var(--font-h);
+  font-size: clamp(4rem, 8vw, 7rem);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.05);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  user-select: none;
+}
+
+.s-title {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.s-sub {
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  color: var(--text-2);
+  line-height: 1.8;
+}
+
+/* ═══════════════════════════ DIVIDER ══════════════════════════════════ */
+.divider {
+  height: 1px;
+  background: var(--c-border);
+}
+
+/* ═══════════════════════════ BUTTONS ══════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: var(--r-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: var(--font-h);
+  border: 1px solid transparent;
+  transition: all 0.3s var(--ease-out);
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--c-accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--c-accent2);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-accent);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-1);
+  border-color: var(--c-border2);
+}
+
+.btn-outline:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border-color: var(--c-border);
+  padding: 10px 20px;
+}
+
+.btn-ghost:hover {
+  color: var(--text-1);
+  border-color: var(--c-border2);
+}
+
+/* ═══════════════════════════ ROW LIST (Projects/Research) ══════════════ */
+.row-list {
+  list-style: none;
+}
+
+.row-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--c-border);
+  transition: background 0.25s;
+}
+
+.row-item:first-child {
+  border-top: 1px solid var(--c-border);
+}
+
+.row-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  border-radius: 4px;
+}
+
+/* ═══════════════════════════ NOISE ═════════════════════════════════════ */
+.noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════ ANIMATIONS ═══════════════════════════════ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes revealLine {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ═══════════════════════════ SCROLL REVEAL ════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-l {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+}
+
+.reveal-l.in {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-r {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+}
+
+.reveal-r.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ═══════════════════════════ RESPONSIVE ═══════════════════════════════ */
+@media(max-width: 768px) {
+  :root {
+    --sect-py: 64px;
+    --px: 24px;
+  }
+
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+@media(max-width: 480px) {
+  :root {
+    --sect-py: 48px;
+  }
+}

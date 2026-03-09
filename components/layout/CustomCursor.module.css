@@ -1,0 +1,52 @@
+/* ── Full-screen canvas for thread trail ── */
+.canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99996;
+    /* Canvas must NOT interfere with page interaction */
+}
+
+/* ── Inner diamond — solid red, snaps to cursor ── */
+.inner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background: var(--c-accent);
+    pointer-events: none;
+    z-index: 99999;
+    will-change: transform;
+    /* No transition — snaps instantly */
+}
+
+/* ── Outer diamond — glowing outline, lags behind ── */
+.outer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 1.5px solid var(--c-accent);
+    pointer-events: none;
+    z-index: 99998;
+    will-change: transform, border-color, box-shadow, opacity;
+    /* Only CSS-transition the glow/color, transform is handled in RAF */
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.4s ease;
+    opacity: 0;
+}
+
+/* ── Hide on touch devices ── */
+@media (hover: none) {
+
+    .canvas,
+    .inner,
+    .outer {
+        display: none;
+    }
+}

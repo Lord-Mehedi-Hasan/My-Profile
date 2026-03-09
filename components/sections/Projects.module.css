@@ -1,0 +1,190 @@
+.projects {
+    background: var(--c-bg);
+}
+
+.title {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.0;
+}
+
+.outline {
+    -webkit-text-stroke: 1.5px rgba(13, 27, 42, 0.20);
+    color: transparent;
+}
+
+.topRow {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+}
+
+/* Filter */
+.filter {
+    display: flex;
+    gap: 4px;
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-sm);
+    padding: 4px;
+}
+
+.filterBtn {
+    font-family: var(--font-h);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-3);
+    background: none;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+}
+
+.filterBtn:hover {
+    color: var(--text-1);
+}
+
+.filterActive {
+    background: var(--c-surface2) !important;
+    color: var(--text-1) !important;
+}
+
+/* List */
+.list {
+    list-style: none;
+}
+
+.row {
+    border-bottom: 1px solid var(--c-border);
+}
+
+.row:first-child {
+    border-top: 1px solid var(--c-border);
+}
+
+/* The entire row is now a Link — flex layout inside */
+.rowLink {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 32px 0;
+    text-decoration: none;
+    transition: padding-left 0.25s, padding-right 0.25s, background 0.25s;
+    cursor: pointer;
+}
+
+.rowLink:hover {
+    padding-left: 8px;
+    padding-right: 8px;
+    margin: 0 -8px;
+    background: rgba(74, 144, 217, 0.05);
+}
+
+.num {
+    font-family: var(--font-m);
+    font-size: 0.68rem;
+    color: var(--c-accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+    min-width: 24px;
+}
+
+.body {
+    flex: 1;
+}
+
+.rowTitle {
+    font-family: var(--font-h);
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-1);
+    margin-bottom: 8px;
+    transition: color 0.2s;
+    line-height: 1.2;
+}
+
+.rowLink:hover .rowTitle {
+    color: var(--c-accent);
+}
+
+.rowDesc {
+    font-size: 0.875rem;
+    color: var(--text-2);
+    line-height: 1.7;
+    max-width: 540px;
+}
+
+.rowRight {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+.catChip {
+    font-family: var(--font-m);
+    font-size: 0.65rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: 1px solid var(--c-border);
+    padding: 3px 10px;
+    border-radius: var(--r-sm);
+}
+
+.techList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.tech {
+    font-family: var(--font-b);
+    font-size: 0.75rem;
+    color: var(--text-3);
+    border: 1px solid var(--c-border);
+    padding: 2px 9px;
+    border-radius: 3px;
+    transition: color 0.2s;
+}
+
+.rowLink:hover .tech {
+    color: var(--text-2);
+}
+
+/* "View →" hint — hidden until hover */
+.viewHint {
+    font-family: var(--font-m);
+    font-size: 0.7rem;
+    color: var(--c-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.rowLink:hover .viewHint {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (max-width: 640px) {
+    .rowLink {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .rowRight {
+        align-items: flex-start;
+    }
+}
