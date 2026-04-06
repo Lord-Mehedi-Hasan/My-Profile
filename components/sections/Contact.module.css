@@ -24,18 +24,17 @@
     align-items: start;
 }
 
-/* ── Left column ─────────────────── */
-.left {
-    /* Left column content — no extra styles needed; spacing is handled by grid */
-}
+
+
 
 .headline {
-    font-size: clamp(3rem, 7vw, 6rem);
+    font-size: clamp(2.4rem, 7vw, 6rem);
     font-weight: 900;
     letter-spacing: -0.04em;
     line-height: 1.0;
     color: var(--text-1);
     margin-bottom: 40px;
+    word-break: break-word;
 }
 
 .outline {

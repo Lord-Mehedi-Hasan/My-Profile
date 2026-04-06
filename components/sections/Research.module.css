@@ -29,11 +29,13 @@
     perspective: 900px;
 }
 
-.flipCard:hover .flipFront {
+.flipCard:hover .flipFront,
+.flipCardFlipped .flipFront {
     transform: rotateY(-180deg);
 }
 
-.flipCard:hover .flipBack {
+.flipCard:hover .flipBack,
+.flipCardFlipped .flipBack {
     transform: rotateY(0deg);
 }
 
@@ -89,6 +91,25 @@
     font-family: var(--font-m);
     letter-spacing: 0.06em;
     transition: color 0.2s;
+}
+
+.hoverHintDesktop {
+    display: inline;
+}
+
+.hoverHintMobile {
+    display: none;
+}
+
+/* On coarse-pointer (touch) devices show the tap hint instead */
+@media (pointer: coarse) {
+    .hoverHintDesktop {
+        display: none;
+    }
+
+    .hoverHintMobile {
+        display: inline;
+    }
 }
 
 .flipCard:hover .hoverHint {
@@ -151,5 +172,17 @@
 
     .flipCard {
         height: 260px;
+    }
+}
+
+@media (max-width: 480px) {
+    .flipCard {
+        height: auto;
+        min-height: 240px;
+    }
+
+    .flipFront,
+    .flipBack {
+        padding: 20px 16px;
     }
 }

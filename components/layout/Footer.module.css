@@ -4,12 +4,14 @@
     left: 0;
     right: 0;
     z-index: 100;
-    height: var(--bottom-bar-h);
+    height: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
     background: rgba(240, 248, 255, 0.90);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--c-border);
 }
+
 
 .inner {
     max-width: var(--wrap);

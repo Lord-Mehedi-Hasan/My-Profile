@@ -42,6 +42,10 @@ export default function Research() {
     const ref = useRef<HTMLElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
     const [vis, setVis] = useState(false);
+    const [flipped, setFlipped] = useState<Record<string, boolean>>({});
+
+    const toggleFlip = (num: string) =>
+        setFlipped(prev => ({ ...prev, [num]: !prev[num] }));
 
     useEffect(() => {
         const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.08 });
@@ -88,7 +92,18 @@ export default function Research() {
                 {/* 3D Flip-card grid */}
                 <div className={styles.flipGrid} ref={gridRef} style={{ perspective: '1000px' }}>
                     {papers.map((p) => (
-                        <div key={p.num} className={styles.flipCard} data-flip-card style={{ transformStyle: 'preserve-3d' }}>
+                        <div
+                            key={p.num}
+                            className={`${styles.flipCard} ${flipped[p.num] ? styles.flipCardFlipped : ''}`}
+                            data-flip-card
+                            style={{ transformStyle: 'preserve-3d' }}
+                            onClick={() => toggleFlip(p.num)}
+                            onKeyDown={e => e.key === 'Enter' && toggleFlip(p.num)}
+                            role="button"
+                            tabIndex={0}
+                            aria-pressed={!!flipped[p.num]}
+                            aria-label={`Research paper: ${p.title}. Press to ${flipped[p.num] ? 'show title' : 'read abstract'}`}
+                        >
                             {/* Front face */}
                             <div className={styles.flipFront}>
                                 <span className={styles.num}>{p.num}</span>
@@ -97,7 +112,10 @@ export default function Research() {
                                     <span className={styles.area}>{p.area}</span>
                                     <span className={styles.year}>{p.year}</span>
                                 </div>
-                                <div className={styles.hoverHint}>Hover to see abstract →</div>
+                                <div className={styles.hoverHint}>
+                                    <span className={styles.hoverHintDesktop}>Hover to see abstract →</span>
+                                    <span className={styles.hoverHintMobile}>Tap to see abstract →</span>
+                                </div>
                             </div>
                             {/* Back face */}
                             <div className={styles.flipBack}>

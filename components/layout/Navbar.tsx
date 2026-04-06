@@ -40,6 +40,14 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', fn);
     }, [isHome]);
 
+    /* Close drawer when user scrolls (mobile UX) */
+    useEffect(() => {
+        if (!open) return;
+        const close = () => setOpen(false);
+        window.addEventListener('scroll', close, { passive: true, once: true });
+        return () => window.removeEventListener('scroll', close);
+    }, [open]);
+
     const go = (href: string) => {
         setOpen(false);
         if (isHome) {

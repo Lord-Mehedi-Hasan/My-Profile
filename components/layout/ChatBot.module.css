@@ -413,12 +413,13 @@
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 480px) {
     .root {
-        bottom: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom));
         right: 16px;
     }
 
     .panel {
         width: calc(100vw - 32px);
         height: 70svh;
+        max-height: calc(100svh - 120px);
     }
 }
