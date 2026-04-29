@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import styles from './Skills.module.css';
+import SkillGlobe from './SkillGlobe';
 
 /* ── Devicons CDN — guaranteed correct brand logos ─── */
 const CDN = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
@@ -123,6 +124,12 @@ export default function Skills() {
                             ))}
                         </div>
                     </div>
+                </div>
+
+                {/* Interactive 3D Skill Globe */}
+                <div className={styles.globeSection}>
+                    <p className={styles.marqueeLabel} style={{ marginBottom: '24px' }}>INTERACTIVE SKILL GLOBE</p>
+                    <SkillGlobe />
                 </div>
 
             </div>

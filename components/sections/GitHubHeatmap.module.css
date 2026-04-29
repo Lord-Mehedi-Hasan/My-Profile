@@ -1,0 +1,146 @@
+.wrapper {
+  padding: 24px;
+  overflow: hidden;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulseGreen 2s ease-in-out infinite;
+  box-shadow: 0 0 8px #10b981;
+}
+
+@keyframes pulseGreen {
+  0%, 100% { box-shadow: 0 0 4px #10b981; }
+  50% { box-shadow: 0 0 14px #10b981; }
+}
+
+.title {
+  font-family: var(--font-m);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--text-2);
+}
+
+.ghLink {
+  font-family: var(--font-m);
+  font-size: 0.75rem;
+  color: var(--c-accent);
+  text-decoration: none;
+  transition: all 0.3s var(--ease-out);
+}
+
+.ghLink:hover {
+  text-shadow: 0 0 10px var(--c-accent);
+}
+
+/* ============================================
+   GRID LAYOUT
+   ============================================ */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.monthRow {
+  display: flex;
+  gap: 0;
+  padding-left: 32px;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.monthLabel {
+  font-size: 0.65rem;
+  color: var(--text-3);
+  font-family: var(--font-m);
+  flex: 1;
+  text-align: center;
+}
+
+.mainGrid {
+  display: flex;
+  gap: 4px;
+}
+
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.dayLabel {
+  font-size: 0.6rem;
+  color: var(--text-3);
+  font-family: var(--font-m);
+  height: 10px;
+  line-height: 10px;
+}
+
+.cells {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cell {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  transition: transform 0.1s;
+}
+
+.cell:hover {
+  transform: scale(1.4);
+}
+
+.level0 { background: var(--c-border); }
+.level1 { background: rgba(74, 144, 217, 0.2); }
+.level2 { background: rgba(74, 144, 217, 0.4); }
+.level3 { background: rgba(74, 144, 217, 0.65); }
+.level4 { background: rgba(74, 144, 217, 0.9); box-shadow: 0 0 4px rgba(74,144,217,0.5); }
+
+/* LEGEND */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.legendLabel {
+  font-size: 0.65rem;
+  color: var(--text-3);
+  font-family: var(--font-m);
+}

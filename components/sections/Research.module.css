@@ -1,18 +1,50 @@
 .research {
     background: var(--c-bg2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Floating particle dots ───────────────── */
+.research::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(circle 2px at 15% 20%, rgba(74,144,217,0.25) 100%, transparent 100%),
+        radial-gradient(circle 1.5px at 40% 65%, rgba(46,204,138,0.2) 100%, transparent 100%),
+        radial-gradient(circle 2px at 70% 30%, rgba(196,154,60,0.2) 100%, transparent 100%),
+        radial-gradient(circle 1.5px at 85% 75%, rgba(74,144,217,0.2) 100%, transparent 100%),
+        radial-gradient(circle 1px at 55% 10%, rgba(46,204,138,0.15) 100%, transparent 100%),
+        radial-gradient(circle 2px at 25% 85%, rgba(196,154,60,0.18) 100%, transparent 100%),
+        radial-gradient(circle 1.5px at 90% 45%, rgba(74,144,217,0.15) 100%, transparent 100%),
+        radial-gradient(circle 1px at 60% 90%, rgba(46,204,138,0.2) 100%, transparent 100%);
+    animation: particleFloat 25s ease-in-out infinite alternate;
+}
+
+@keyframes particleFloat {
+    0%   { transform: translateY(0px)   translateX(0px); }
+    33%  { transform: translateY(-18px) translateX(12px); }
+    66%  { transform: translateY(10px)  translateX(-8px); }
+    100% { transform: translateY(-24px) translateX(16px); }
 }
 
 .title {
-    font-size: clamp(3rem, 7vw, 6rem);
-    font-weight: 900;
+    font-family: var(--font-h);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 700;
     letter-spacing: -0.04em;
-    line-height: 1.0;
+    line-height: 0.9;
     margin-bottom: 56px;
+    color: var(--text-1);
 }
 
+/* Second word in italic accent — like Showcase */
 .outline {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
-    color: transparent;
+    display: block;
+    font-style: italic;
+    color: var(--c-accent);
 }
 
 /* ── 3D Flip Card Grid ──────────────── */

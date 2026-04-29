@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ═══════════════════════════ DESIGN TOKENS ════════════════════════════ */
 :root {
@@ -30,9 +30,11 @@
   --text-3: rgba(5, 21, 51, 0.46);
   /* soft deep navy */
 
-  --font-h: 'DM Sans', sans-serif;
-  --font-b: 'Space Grotesk', sans-serif;
-  --font-m: 'Fira Code', monospace;
+  /* Showcase fonts: Fraunces (headings/serif) + Inter (body) + JetBrains Mono (code) */
+  --font-h: 'Fraunces', Georgia, serif;
+  --font-b: 'Inter', system-ui, sans-serif;
+  --font-m: 'JetBrains Mono', 'Courier New', monospace;
+  --font-serif: 'Fraunces', Georgia, serif;
 
   --r-sm: 4px;
   --r-md: 8px;
@@ -72,19 +74,60 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Remove scroll-behavior: smooth — Lenis handles smoothing */
+  scroll-behavior: auto;
   overflow-x: hidden;
 }
 
+
+/* ── Lenis smooth scroll ──────────────────── */
+html.lenis { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+
+
 body {
   font-family: var(--font-b);
-  background: var(--c-bg);
+  background-color: var(--c-bg);
   color: var(--text-1);
-  line-height: 1.7;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* CSS ambient background — replaces Background3D (Three.js RAF loop).
+   Radial-gradient orbs + slow CSS drift = zero JS, compositor-only. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60vw 50vh at 15% 20%, rgba(74,144,217,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 50vw 40vh at 85% 75%, rgba(46,204,138,0.05) 0%, transparent 70%);
+  animation: bgDrift 20s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes bgDrift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(-2vw, 2vh, 0) scale(1.04); }
+}
+
+/* Film grain texture overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 
 h1,
 h2,
@@ -93,9 +136,33 @@ h4,
 h5,
 h6 {
   font-family: var(--font-h);
-  line-height: 1.05;
+  line-height: 1.0;
   color: var(--text-1);
   letter-spacing: -0.03em;
+}
+
+/* ── Showcase typography utilities ──────────────── */
+/* Hero name size */
+.text-huge {
+  font-size: clamp(4rem, 14vw, 18rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+}
+
+/* Section heading size */
+.text-section {
+  font-size: clamp(3rem, 8vw, 11rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+}
+
+/* Mono label — "01 / Section Name" */
+.label-mono {
+  font-family: var(--font-m);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  font-weight: 700;
 }
 
 a {

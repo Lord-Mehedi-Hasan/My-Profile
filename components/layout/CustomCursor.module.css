@@ -1,52 +1,55 @@
-/* ── Full-screen canvas for thread trail ── */
-.canvas {
+/* ── Lightweight CSS cursor ──────────────────── */
+
+/* ── Silk thread canvas — sits behind dot & ring ── */
+.threadCanvas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: 99996;
-    /* Canvas must NOT interfere with page interaction */
+    z-index: 99997;
+    /* composited layer — never triggers paint */
+    will-change: contents;
 }
 
-/* ── Inner diamond — solid red, snaps to cursor ── */
-.inner {
+/* Inner dot — solid accent, snaps instantly */
+.dot {
     position: fixed;
     top: 0;
     left: 0;
     width: 8px;
     height: 8px;
     background: var(--c-accent);
+    border-radius: 50%;
     pointer-events: none;
     z-index: 99999;
     will-change: transform;
-    /* No transition — snaps instantly */
+    transition: transform 0.08s ease;
 }
 
-/* ── Outer diamond — glowing outline, lags behind ── */
-.outer {
+/* Outer ring — lags behind, expands on hover */
+.ring {
     position: fixed;
     top: 0;
     left: 0;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     background: transparent;
     border: 1.5px solid var(--c-accent);
+    border-radius: 50%;
     pointer-events: none;
     z-index: 99998;
-    will-change: transform, border-color, box-shadow, opacity;
-    /* Only CSS-transition the glow/color, transform is handled in RAF */
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.4s ease;
-    opacity: 0;
+    will-change: transform, opacity;
+    transition: transform 0.0s linear, opacity 0.25s ease;
+    mix-blend-mode: multiply;
 }
 
 /* ── Hide on touch devices ── */
-@media (hover: none) {
-
-    .canvas,
-    .inner,
-    .outer {
+@media (pointer: coarse) {
+    .dot,
+    .ring,
+    .threadCanvas {
         display: none;
     }
 }

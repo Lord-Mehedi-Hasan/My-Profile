@@ -4,148 +4,143 @@ import { useEffect, useRef } from 'react';
 import styles from './CustomCursor.module.css';
 
 /**
- * Diamond cursor with WE-FLOW style thread trail:
- *  – Canvas spring-chain thread (20 nodes, each lerping toward the previous)
- *  – Small solid red inner diamond snapping to cursor
- *  – Glowing outer diamond that cycles through hue over time
- *  – On hover: outer diamond grows, thread brightens
- *  – On click:  everything compresses
+ * Cursor with silk-thread trail effect.
+ * - Inner dot: snaps instantly to cursor
+ * - Outer ring: lerps behind for depth
+ * - Thread: canvas of N spring-physics nodes — each lags its predecessor,
+ *   creating an organic trailing thread that feels like silk dragging.
  */
-const NODES = 22;   // thread length
-const LERP_HEAD = 0.28; // how fast each node chases previous
-const LERP_INC = 0.012; // extra slowdown per successive node
+
+const NODES = 20;       // thread length (number of points)
+const LERP  = 0.18;     // spring tightness per node (cumulative lag)
 
 export default function CustomCursor() {
-    const innerRef = useRef<HTMLDivElement>(null);
-    const outerRef = useRef<HTMLDivElement>(null);
+    const dotRef    = useRef<HTMLDivElement>(null);
+    const ringRef   = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        const inner = innerRef.current;
-        const outer = outerRef.current;
+        if (window.matchMedia('(pointer: coarse)').matches) return;
+
+        const dot    = dotRef.current;
+        const ring   = ringRef.current;
         const canvas = canvasRef.current;
-        if (!inner || !outer || !canvas) return;
+        if (!dot || !ring || !canvas) return;
 
-        const ctx = canvas.getContext('2d')!;
-
-        // Resize canvas to full viewport
+        /* ── Canvas setup ── */
         const resize = () => {
-            canvas.width = window.innerWidth;
+            canvas.width  = window.innerWidth;
             canvas.height = window.innerHeight;
         };
         resize();
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', resize, { passive: true });
 
-        // Spring chain: each node is {x, y}
-        const nodes: { x: number; y: number }[] = Array.from({ length: NODES }, () => ({
-            x: -300, y: -300,
-        }));
+        const ctx = canvas.getContext('2d')!;
 
+        /* ── State ── */
         let mx = -300, my = -300;
+        let rx = -300, ry = -300;
         let isHover = false;
-        let isClick = false;
-        let hue = 0;   // for color cycling
+        let isDown  = false;
         let raf: number;
 
-        const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
-        const onDown = () => { isClick = true; };
-        const onUp = () => { isClick = false; };
-        const onEnter = () => { isHover = true; };
-        const onLeave = () => { isHover = false; };
+        // Thread nodes — each point [x, y]
+        const pts: [number, number][] = Array.from({ length: NODES }, () => [-300, -300]);
 
-        const addListeners = () => {
-            document.querySelectorAll('a, button, [data-magnetic], input, textarea, select').forEach(el => {
-                el.addEventListener('mouseenter', onEnter);
-                el.addEventListener('mouseleave', onLeave);
+        /* ── Mouse ── */
+        const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
+        const onDown = () => { isDown = true; };
+        const onUp   = () => { isDown = false; };
+
+        /* ── Hover detection ── */
+        const setHover = (v: boolean) => () => { isHover = v; };
+        const bindHover = () => {
+            document.querySelectorAll('a, button, [role="button"], input, textarea, select').forEach(el => {
+                el.addEventListener('mouseenter', setHover(true));
+                el.addEventListener('mouseleave', setHover(false));
             });
         };
+        const t = setTimeout(bindHover, 800);
 
-        window.addEventListener('mousemove', onMove);
-        window.addEventListener('mousedown', onDown);
-        window.addEventListener('mouseup', onUp);
-        setTimeout(addListeners, 600);
+        /* ── Lerp helper ── */
+        const lerp = (a: number, b: number, n: number) => a + (b - a) * n;
 
-        // ── Colour palette cycling ──────────────────────
-        // Cycles through: red (#C51110) → purple → cyan → back
-        const getHslColor = (h: number, alpha: number) =>
-            `hsla(${h % 360}, 100%, 60%, ${alpha})`;
-
+        /* ── RAF loop ── */
         const tick = () => {
-            hue = (hue + 0.6) % 360;
+            raf = requestAnimationFrame(tick);
 
-            // ── Update spring chain ─────────────────────
-            nodes[0].x += (mx - nodes[0].x) * (LERP_HEAD);
-            nodes[0].y += (my - nodes[0].y) * (LERP_HEAD);
+            /* dot — instant */
+            const ds = isDown ? 0.5 : 1;
+            dot.style.transform = `translate3d(${mx - 4}px,${my - 4}px,0) scale(${ds})`;
+
+            /* ring — lags */
+            rx = lerp(rx, mx, 0.18);
+            ry = lerp(ry, my, 0.18);
+            const rs = isHover ? 2.2 : isDown ? 0.6 : 1;
+            ring.style.transform = `translate3d(${rx - 16}px,${ry - 16}px,0) scale(${rs})`;
+            ring.style.opacity   = isHover ? '0.6' : '0.9';
+
+            /* thread — spring chain */
+            pts[0][0] = lerp(pts[0][0], mx, LERP);
+            pts[0][1] = lerp(pts[0][1], my, LERP);
             for (let i = 1; i < NODES; i++) {
-                const speed = LERP_HEAD - i * LERP_INC;
-                const s = Math.max(speed, 0.04);
-                nodes[i].x += (nodes[i - 1].x - nodes[i].x) * s;
-                nodes[i].y += (nodes[i - 1].y - nodes[i].y) * s;
+                pts[i][0] = lerp(pts[i][0], pts[i - 1][0], LERP);
+                pts[i][1] = lerp(pts[i][1], pts[i - 1][1], LERP);
             }
 
-            // ── Draw thread on canvas ───────────────────
+            /* draw */
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (mx > -200) {            // only draw once mouse entered
-                // draw segments with tapering width and opacity
-                for (let i = 0; i < NODES - 1; i++) {
-                    const t = 1 - i / NODES;        // 1 at head, 0 at tail
-                    const lineHue = (hue + i * 4) % 360;  // slight hue offset per segment
-                    const alpha = isHover ? t * 0.85 : t * 0.45;
-                    const width = isClick ? t * 1.2 : isHover ? t * 2.4 : t * 1.8;
-
-                    ctx.beginPath();
-                    ctx.moveTo(nodes[i].x, nodes[i].y);
-                    ctx.lineTo(nodes[i + 1].x, nodes[i + 1].y);
-                    ctx.strokeStyle = getHslColor(lineHue, alpha);
-                    ctx.lineWidth = width;
-                    ctx.lineCap = 'round';
-                    ctx.shadowColor = getHslColor(lineHue, 0.6);
-                    ctx.shadowBlur = isHover ? 12 : 6;
-                    ctx.stroke();
+            if (mx > -100) { // only draw when cursor is on screen
+                ctx.beginPath();
+                ctx.moveTo(mx, my);
+                for (let i = 0; i < NODES; i++) {
+                    ctx.lineTo(pts[i][0], pts[i][1]);
                 }
+
+                // Gradient along thread: opaque near cursor → transparent at tail
+                const grad = ctx.createLinearGradient(mx, my, pts[NODES - 1][0], pts[NODES - 1][1]);
+                grad.addColorStop(0,    isHover ? 'rgba(74,144,217,0.55)' : 'rgba(74,144,217,0.40)');
+                grad.addColorStop(0.4,  isHover ? 'rgba(46,204,138,0.30)' : 'rgba(74,144,217,0.20)');
+                grad.addColorStop(1,    'rgba(74,144,217,0)');
+
+                ctx.strokeStyle = grad;
+                ctx.lineWidth   = isHover ? 1.8 : 1.2;
+                ctx.lineCap     = 'round';
+                ctx.lineJoin    = 'round';
+                ctx.stroke();
             }
-
-            // ── Inner diamond ───────────────────────────
-            const innerScale = isClick ? 0.5 : isHover ? 0 : 1;
-            inner.style.transform = `translate(${mx - 4}px, ${my - 4}px) rotate(45deg) scale(${innerScale})`;
-
-            // ── Outer diamond ───────────────────────────
-            const outerScale = isClick ? 0.7 : isHover ? 2.0 : 1;
-            const outerColor = `hsl(${hue % 360}, 100%, 60%)`;
-            const glowSize = isHover ? 18 : 10;
-            const glowAlpha = isHover ? 0.9 : 0.55;
-
-            // Use CSS vars to push glow into the element
-            outer.style.transform = `translate(${mx - 14}px, ${my - 14}px) rotate(45deg) scale(${outerScale})`;
-            outer.style.borderColor = outerColor;
-            outer.style.boxShadow = `0 0 ${glowSize}px ${glowSize / 2}px hsla(${hue % 360},100%,60%,${glowAlpha}), inset 0 0 ${glowSize / 2}px hsla(${hue % 360},100%,60%,0.15)`;
-            outer.style.opacity = mx > -200 ? '1' : '0';
-
-            raf = requestAnimationFrame(tick);
         };
         tick();
 
         document.documentElement.style.cursor = 'none';
+        window.addEventListener('mousemove', onMove, { passive: true });
+        window.addEventListener('mousedown', onDown, { passive: true });
+        window.addEventListener('mouseup',   onUp,   { passive: true });
 
         return () => {
             cancelAnimationFrame(raf);
+            clearTimeout(t);
+            window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('mousedown', onDown);
             window.removeEventListener('mouseup', onUp);
-            window.removeEventListener('resize', resize);
             document.documentElement.style.cursor = '';
         };
     }, []);
 
     return (
         <>
-            {/* Full-screen canvas for the thread trail */}
-            <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
-            {/* Inner solid diamond */}
-            <div ref={innerRef} className={styles.inner} aria-hidden="true" />
-            {/* Outer glowing diamond */}
-            <div ref={outerRef} className={styles.outer} aria-hidden="true" />
+            {/* Thread canvas — fixed, full-screen, pointer-events:none */}
+            <canvas
+                ref={canvasRef}
+                className={styles.threadCanvas}
+                aria-hidden="true"
+            />
+            {/* Inner dot */}
+            <div ref={dotRef}  className={styles.dot}  aria-hidden="true" />
+            {/* Outer ring */}
+            <div ref={ringRef} className={styles.ring} aria-hidden="true" />
         </>
     );
 }

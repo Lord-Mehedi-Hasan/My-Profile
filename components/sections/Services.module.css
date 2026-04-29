@@ -5,6 +5,26 @@
     overflow: hidden;
 }
 
+/* ── Animated dot grid ──────────────────── */
+.services::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(74,144,217,0.2) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);
+    animation: dotGridShift 14s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes dotGridShift {
+    0%   { background-position: 0 0; }
+    100% { background-position: 32px 32px; }
+}
+
 /* ── Watermark ────────────────────────── */
 .watermark {
     position: absolute;

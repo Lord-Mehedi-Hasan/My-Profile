@@ -87,7 +87,7 @@
     color: var(--text-1);
 }
 
-/* ── Hamburger ────────────────────────────── */
+/* ── Hamburger ────────────────────────── */
 .burger {
     display: none;
     flex-direction: column;
@@ -102,14 +102,17 @@
     padding: 8px;
     align-items: center;
     justify-content: center;
+    margin-left: auto;
 }
 
 .burger span {
     display: block;
-    height: 1.5px;
+    width: 24px;
+    height: 2px;
     background: var(--text-1);
     transform-origin: center;
     transition: transform 0.3s, opacity 0.3s;
+    border-radius: 2px;
 }
 
 .burgerOpen span:nth-child(1) {
@@ -176,14 +179,29 @@
     background: rgba(0, 0, 0, 0.5);
 }
 
-/* ── Responsive ────────────────────────────── */
+/* ── Responsive ────────────────────────── */
 @media (max-width: 768px) {
+    /* Always show a solid top bar on mobile */
+    .nav {
+        background: rgba(240, 248, 255, 0.97);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--c-border);
+        box-shadow: 0 1px 12px rgba(74, 144, 217, 0.07);
+    }
+
     .links {
+        display: none;
+    }
+
+    /* Hide live clock on mobile so burger stays visible */
+    .clockWrap {
         display: none;
     }
 
     .burger {
         display: flex;
+        margin-left: auto;
     }
 
     .drawerLink {

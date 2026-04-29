@@ -5,8 +5,10 @@ import styles from './Footer.module.css';
 
 export default function Footer() {
     const [time, setTime] = useState('');
+    const [year, setYear] = useState<number | null>(null);
 
     useEffect(() => {
+        setYear(new Date().getFullYear());
         const fmt = () => {
             const now = new Date();
             setTime(now.toLocaleTimeString('en-US', {
@@ -27,7 +29,7 @@ export default function Footer() {
             <div className={styles.inner}>
                 {/* Left */}
                 <span className={styles.copy}>
-                    &copy; {new Date().getFullYear()} Mehedi Hasan
+                    &copy; {year ?? ''} Mehedi Hasan
                 </span>
 
                 {/* Center */}

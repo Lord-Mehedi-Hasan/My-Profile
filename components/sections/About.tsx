@@ -2,22 +2,22 @@
 
 import { useEffect, useRef } from 'react';
 import styles from './About.module.css';
+import GitHubHeatmap from './GitHubHeatmap';
+import Magnetic from '@/components/ui/Magnetic';
 
 const highlights = [
     {
-        num: '01',
         icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
             </svg>
         ),
         title: 'Competitive Programmer',
-        desc: 'ICPC 4× and NCPC 2× participant — problem solver at heart, sharpened through collegiate-level algorithmic contests.',
+        desc: 'ICPC 4× and NCPC 2× participant — problem solver sharpened through collegiate-level algorithmic contests.',
     },
     {
-        num: '02',
         icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" />
             </svg>
         ),
@@ -25,32 +25,46 @@ const highlights = [
         desc: 'Production-ready apps with Next.js, NestJS, ASP.NET & C# across web and desktop platforms.',
     },
     {
-        num: '03',
         icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" /><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
             </svg>
         ),
         title: 'ML Researcher',
-        desc: "Published work in healthcare AI — Alzheimer's, CHD, Stroke prediction, NLP sentiment analysis.",
+        desc: "Published in healthcare AI — Alzheimer's, CHD, Stroke prediction & NLP sentiment analysis.",
     },
     {
-        num: '04',
         icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
             </svg>
         ),
         title: 'Always Learning',
-        desc: 'Currently exploring DevOps with Azure, Generative AI, and Angular to stay on the cutting edge.',
+        desc: 'Exploring DevOps with Azure, Generative AI, and Angular to stay on the cutting edge.',
     },
 ];
 
-const info = [
-    { label: 'Location', value: 'Mirpur, Dhaka, Bangladesh' },
-    { label: 'Email', value: 'mh2822299@gmail.com' },
-    { label: 'Degree', value: 'B.Sc. CSE — AIUB (2021–2025)' },
-    { label: 'Status', value: 'Open to opportunities' },
+const stats = [
+    { num: '7',  suffix: '+', label: 'Projects Built' },
+    { num: '4',  suffix: '×', label: 'ICPC Participations' },
+    { num: '2',  suffix: '×', label: 'NCPC Competitions' },
+    { num: '4',  suffix: '+', label: 'Research Papers' },
+    { num: '4',  suffix: '+', label: 'Certifications' },
+];
+
+const chips = [
+    {
+        label: 'Mirpur, Dhaka',
+        icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>,
+    },
+    {
+        label: 'B.Sc. CSE — AIUB',
+        icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>,
+    },
+    {
+        label: 'Open to opportunities',
+        icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>,
+    },
 ];
 
 export default function About() {
@@ -58,18 +72,9 @@ export default function About() {
 
     useEffect(() => {
         const sec = ref.current;
-
-        // Failsafe — force all GSAP-animated elements visible after 2.5s
-        // (About is off-screen initially so we give more time)
         const forceVisible = () => {
             if (!sec) return;
-            const els = [
-                sec.querySelector('[data-about-left]') as HTMLElement | null,
-                sec.querySelector('[data-about-info]') as HTMLElement | null,
-                ...Array.from(sec.querySelectorAll<HTMLElement>('[data-about-card]')),
-            ];
-            els.forEach(el => {
-                if (!el) return;
+            sec.querySelectorAll<HTMLElement>('[data-reveal]').forEach(el => {
                 el.style.opacity = '1';
                 el.style.transform = 'none';
             });
@@ -81,37 +86,26 @@ export default function About() {
                 const { gsap } = await import('gsap');
                 const { ScrollTrigger } = await import('gsap/ScrollTrigger');
                 gsap.registerPlugin(ScrollTrigger);
-
                 if (!sec) { forceVisible(); return; }
                 clearTimeout(safeTimer);
 
-                const left = sec.querySelector('[data-about-left]') as HTMLElement;
-                const cards = sec.querySelectorAll<HTMLElement>('[data-about-card]');
-                const infoEl = sec.querySelector('[data-about-info]') as HTMLElement;
-
-                if (left) gsap.fromTo(left,
-                    { x: -50, opacity: 0 },
-                    {
-                        x: 0, opacity: 1, duration: 1.0, ease: 'expo.out',
-                        scrollTrigger: { trigger: sec, start: 'top 75%', toggleActions: 'play none none reverse' }
-                    }
-                );
-
-                if (cards.length) gsap.fromTo(cards,
-                    { y: 40, opacity: 0 },
-                    {
-                        y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', stagger: 0.1,
-                        scrollTrigger: { trigger: sec, start: 'top 68%', toggleActions: 'play none none reverse' }
-                    }
-                );
-
-                if (infoEl) gsap.fromTo(infoEl,
-                    { y: 24, opacity: 0 },
-                    {
-                        y: 0, opacity: 1, duration: 0.8, ease: 'power3.out', delay: 0.2,
-                        scrollTrigger: { trigger: sec, start: 'top 65%', toggleActions: 'play none none reverse' }
-                    }
-                );
+                const els = sec.querySelectorAll<HTMLElement>('[data-reveal]');
+                els.forEach((el, i) => {
+                    gsap.fromTo(el,
+                        { y: 24, opacity: 0 },
+                        {
+                            y: 0, opacity: 1,
+                            duration: 0.7,
+                            ease: 'power3.out',
+                            delay: i * 0.08,
+                            scrollTrigger: {
+                                trigger: sec,
+                                start: 'top 75%',
+                                toggleActions: 'play none none none',
+                            },
+                        }
+                    );
+                });
             } catch {
                 forceVisible();
             }
@@ -125,74 +119,82 @@ export default function About() {
             <div className="wrap">
 
                 {/* Eyebrow */}
-                <div className={styles.eyebrow}>
+                <div className={styles.eyebrow} data-reveal>
                     <span className={styles.eyebrowLine} />
                     WHO I AM
                 </div>
 
-                {/* Two-column layout */}
-                <div className={styles.grid}>
+                {/* ── Bento Grid ── */}
+                <div className={styles.bento}>
 
-                    {/* Left */}
-                    <div className={styles.left} data-about-left>
-
+                    {/* A — Intro card */}
+                    <div className={`${styles.card} ${styles.cardIntro}`} data-reveal>
                         <h2 className={styles.title} id="about-h">
-                            Developer<span className={styles.dot}>.</span><br />
-                            <span className={styles.outline}>Researcher</span><br />
-                            Builder
+                            Developer.<br />
+                            <span className={styles.titleAccent}>Researcher.</span><br />
+                            Builder.
                         </h2>
 
-                        <p className={styles.bio}>
-                            I&apos;m a CS graduate from <strong>AIUB</strong>, passionate about creating software
-                            that solves real problems. My journey spans competitive programming arenas, research
-                            labs, and production codebases — and I thrive in all three.
-                        </p>
-                        <p className={styles.bio}>
-                            Hands-on with <strong>C++, Python, Java, TypeScript</strong> and frameworks like{' '}
-                            <strong>Next.js, NestJS, and ASP.NET</strong>. My research applies machine learning
-                            to early disease detection in healthcare.
+                        <p className={styles.introBio}>
+                            CS graduate from <strong>AIUB</strong>, passionate about creating software
+                            that solves real problems. My journey spans competitive programming arenas,
+                            research labs, and production codebases — and I thrive in all three.
                         </p>
 
-                        {/* Quick info grid */}
-                        <div className={styles.infoGrid} data-about-info>
-                            {info.map(({ label, value }) => (
-                                <div key={label} className={styles.infoItem}>
-                                    <span className={styles.infoLabel}>{label}</span>
-                                    <span className={styles.infoValue}>{value}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Actions */}
-                        <div className={styles.actions}>
-                            <a href="https://github.com/Lord-Mehedi-Hasan" target="_blank" rel="noopener noreferrer" className={styles.actionBtn}>
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" /></svg>
-                                GitHub
-                            </a>
-                            <a href="https://www.linkedin.com/in/mehedi-hasan-50b2ba2b2/" target="_blank" rel="noopener noreferrer" className={styles.actionBtn}>
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
-                                LinkedIn
-                            </a>
-                            <a href="mailto:mh2822299@gmail.com" className={styles.actionBtn}>
-                                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
-                                Email
-                            </a>
+                        <div className={styles.introBottom}>
+                            <div className={styles.infoChips}>
+                                {chips.map(c => (
+                                    <span key={c.label} className={styles.chip}>
+                                        {c.icon}
+                                        {c.label}
+                                    </span>
+                                ))}
+                            </div>
+                            <div className={styles.btnRow}>
+                                <Magnetic strength={0.3}>
+                                    <a href="/CV_WebDev_Mehedi_Hasan.pdf" download className={styles.cvBtn}>
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Web Dev CV
+                                    </a>
+                                </Magnetic>
+                                <Magnetic strength={0.3}>
+                                    <a href="/CV_Research_Mehedi_Hasan.pdf" download className={styles.cvBtn}>
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        Research CV
+                                    </a>
+                                </Magnetic>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Right — highlight cards grid */}
-                    <div className={styles.right}>
-                        {highlights.map((h) => (
-                            <div key={h.num} className={styles.card} data-about-card>
-                                <div className={styles.cardTop}>
-                                    <div className={styles.cardIconWrap}>{h.icon}</div>
-                                    <span className={styles.cardNum}>{h.num}</span>
-                                </div>
-                                <h3 className={styles.cardTitle}>{h.title}</h3>
-                                <p className={styles.cardDesc}>{h.desc}</p>
+                    {/* B — Stats card (dark, spans 2 rows) */}
+                    <div className={`${styles.card} ${styles.cardStats}`} data-reveal>
+                        {stats.map(({ num, suffix, label }) => (
+                            <div key={label} className={styles.statItem}>
+                                <span className={styles.statNum}>
+                                    {num}<span>{suffix}</span>
+                                </span>
+                                <span className={styles.statLabel}>{label}</span>
                             </div>
                         ))}
                     </div>
+
+                    {/* C — Highlight cards (2×2 grid, spans 2 cols) */}
+                    <div className={`${styles.card} ${styles.cardHighlights}`} data-reveal>
+                        {highlights.map((h) => (
+                            <div key={h.title} className={styles.highlightCard}>
+                                <div className={styles.hlIcon}>{h.icon}</div>
+                                <h3 className={styles.hlTitle}>{h.title}</h3>
+                                <p className={styles.hlDesc}>{h.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* D — GitHub heatmap (full width) */}
+                    <div className={`${styles.card} ${styles.cardHeatmap}`} data-reveal>
+                        <GitHubHeatmap />
+                    </div>
+
                 </div>
             </div>
         </section>

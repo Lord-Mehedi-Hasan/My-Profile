@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import '../styles/globals.css';
 import GlobalShell from '@/components/layout/GlobalShell';
 
+
+
 export const metadata: Metadata = {
   title: 'Mehedi Hasan | Web Developer & Competitive Programmer',
   description:

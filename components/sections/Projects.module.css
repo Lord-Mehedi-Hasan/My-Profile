@@ -1,5 +1,38 @@
 .projects {
     background: var(--c-bg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Radial pulse rings ───────────────────── */
+.projects::before,
+.projects::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    border: 1px solid rgba(74,144,217,0.12);
+}
+
+.projects::before {
+    width: 500px;
+    height: 500px;
+    animation: ringPulse 8s ease-out infinite;
+}
+
+.projects::after {
+    width: 800px;
+    height: 800px;
+    animation: ringPulse 8s ease-out 4s infinite;
+}
+
+@keyframes ringPulse {
+    0%   { opacity: 0.6; transform: translate(-50%, -50%) scale(0.6); }
+    100% { opacity: 0;   transform: translate(-50%, -50%) scale(1.4); }
 }
 
 .title {

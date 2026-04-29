@@ -5,6 +5,29 @@
     overflow: hidden;
 }
 
+/* ── Diagonal sweeping lines ──────────────── */
+.skills::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    z-index: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(74,144,217,0.04) 40px,
+        rgba(74,144,217,0.04) 41px
+    );
+    animation: diagSlide 20s linear infinite;
+    opacity: 1;
+}
+
+@keyframes diagSlide {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(82px, 82px); }
+}
+
 /* ── Watermark ──────────────────────────── */
 .watermark {
     position: absolute;
@@ -234,6 +257,16 @@
 
 .marqueeItem:hover {
     color: var(--c-accent);
+}
+
+/* ── Globe Section ──────────────────────── */
+.globeSection {
+    position: relative;
+    z-index: 1;
+    margin-top: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* ── Responsive ─────────────────────────── */

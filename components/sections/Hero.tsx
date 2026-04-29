@@ -3,64 +3,41 @@
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useMagnetic } from '@/hooks/useMagnetic';
-import { useCountUp } from '@/hooks/useCountUp';
 import styles from './Hero.module.css';
+import HeroDecor from './HeroDecor';
 
 const HeroCanvas = dynamic(() => import('./HeroCanvas'), { ssr: false });
 
 const roles = ['Full-Stack Engineer', 'Competitive Programmer', 'ML Researcher', 'Problem Solver'];
 
-const stats = [
-    { v: '4×', l: 'ICPC' },
-    { v: '7+', l: 'Projects' },
-    { v: '4', l: 'Papers' },
-    { v: '5+', l: 'Languages' },
-];
-
-function StatCount({ v, l }: { v: string; l: string }) {
-    const { ref, display } = useCountUp(v, 1200);
-    return (
-        <div className={styles.stat}>
-            <strong ref={ref as React.Ref<HTMLElement>}>{display}</strong>
-            <span>{l}</span>
-        </div>
-    );
-}
-
 export default function Hero() {
     const secRef = useRef<HTMLElement>(null);
     const leftRef = useRef<HTMLDivElement>(null);
     const rightRef = useRef<HTMLDivElement>(null);
-    const stripRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLDivElement>(null);
     const magnetPrimary = useMagnetic<HTMLButtonElement>(0.45, 40);
     const magnetGhost = useMagnetic<HTMLAnchorElement>(0.45, 40);
 
-    /* Mouse parallax on canvas orb */
+    /* Mouse parallax on canvas orb — must preserve the CSS translateY(-50%) centering */
     useEffect(() => {
         const el = canvasRef.current;
         if (!el) return;
         const onMove = (e: MouseEvent) => {
-            const rx = (e.clientX / window.innerWidth - 0.5) * 18;
-            const ry = (e.clientY / window.innerHeight - 0.5) * 10;
-            el.style.transform = `translate(${rx * 0.35}px, ${ry * 0.25}px)`;
+            const rx = (e.clientX / window.innerWidth - 0.5) * 14;
+            const ry = (e.clientY / window.innerHeight - 0.5) * 8;
+            el.style.transform = `translateY(calc(-50% + ${ry * 0.25}px)) translateX(${rx * 0.35}px)`;
         };
         window.addEventListener('mousemove', onMove, { passive: true });
         return () => window.removeEventListener('mousemove', onMove);
     }, []);
 
-    /* GSAP entry animations only — NO scroll parallax.
-       Scroll parallax was the cause of the blank-page bug:
-       when loading at a different section GSAP's scrub ScrollTrigger
-       immediately applied opacity≈0 to the hero content. */
+    /* GSAP entry animations */
     useEffect(() => {
         const left = leftRef.current;
         const right = rightRef.current;
-        const strip = stripRef.current;
 
-        // Failsafe — force visibility if GSAP hasn't run within 1.8 s
         const forceVisible = () => {
-            [left, right, strip].forEach(el => {
+            [left, right].forEach(el => {
                 if (!el) return;
                 el.style.opacity = '1';
                 el.style.transform = 'none';
@@ -71,15 +48,10 @@ export default function Hero() {
         const init = async () => {
             try {
                 const { gsap } = await import('gsap');
-                if (!left || !right || !strip) { forceVisible(); return; }
+                if (!left || !right) { forceVisible(); return; }
                 clearTimeout(safeTimer);
-
-                /* One-shot slide-in entry animations.
-                   After completion elements stay at opacity:1 forever —
-                   no scroll-based override, so navigating back always works. */
-                gsap.fromTo(left, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.1 });
-                gsap.fromTo(right, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.25 });
-                gsap.fromTo(strip, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', delay: 0.4 });
+                gsap.fromTo(left,  { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.1 });
+                gsap.fromTo(right, { x: 50,  opacity: 0 }, { x: 0, opacity: 1, duration: 1.0, ease: 'expo.out', delay: 0.25 });
             } catch {
                 forceVisible();
             }
@@ -97,9 +69,16 @@ export default function Hero() {
             {/* Background layers */}
             <div className={styles.gridBg} aria-hidden="true" />
             <div className={styles.noise} aria-hidden="true" />
-            {/* Gradient orbs */}
             <div className={styles.orbBlue} aria-hidden="true" />
             <div className={styles.orbGreen} aria-hidden="true" />
+
+            {/* Decorative SVG rings — right side */}
+            <HeroDecor />
+
+            {/* 3D orb — direct section child */}
+            <div ref={canvasRef} className={styles.canvasWrap} aria-hidden="true">
+                <HeroCanvas />
+            </div>
 
             {/* ── Main split layout ── */}
             <div className={styles.layout}>
@@ -145,7 +124,7 @@ export default function Hero() {
                         </button>
                         <a
                             ref={magnetGhost}
-                            href="/resume.pdf"
+                            href="/CV_WebDev_Mehedi_Hasan.pdf"
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.ctaGhost}
@@ -168,14 +147,9 @@ export default function Hero() {
                     </div>
                 </div>
 
-                {/* Right — 3D canvas + floating cards */}
+                {/* Right — floating stat cards */}
                 <div ref={rightRef} className={styles.right}>
-                    <div ref={canvasRef} className={styles.canvasWrap} aria-hidden="true">
-                        <HeroCanvas />
-                    </div>
-
-                    {/* Floating stat cards */}
-                    <div className={styles.floatCard} style={{ top: '12%', right: '-4%' }}>
+                    <div className={styles.floatCard} style={{ top: '38%', left: '2%' }}>
                         <span className={styles.floatCardNum}>4×</span>
                         <span className={styles.floatCardLabel}>ICPC Participant</span>
                     </div>
@@ -187,15 +161,6 @@ export default function Hero() {
                         <span className={styles.floatCardNum}>4</span>
                         <span className={styles.floatCardLabel}>Research Papers</span>
                     </div>
-                </div>
-            </div>
-
-            {/* Bottom stats strip */}
-            <div ref={stripRef} className={styles.statsStrip}>
-                {stats.map(s => <StatCount key={s.l} v={s.v} l={s.l} />)}
-                <div className={styles.scrollCue} onClick={() => scrollTo('about')} role="button" tabIndex={0} aria-label="Scroll down">
-                    <span className={styles.scrollLine} />
-                    <span className={styles.scrollText}>scroll</span>
                 </div>
             </div>
         </section>

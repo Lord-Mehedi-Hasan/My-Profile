@@ -20,7 +20,7 @@ export default function ScrollProgress() {
 
     return (
         <>
-            {/* Top progress bar */}
+            {/* Horizontal top progress bar */}
             <div
                 className={styles.progressBar}
                 style={{ width: `${progress}%` }}
@@ -31,7 +31,15 @@ export default function ScrollProgress() {
                 aria-label="Page scroll progress"
             />
 
-            {/* Scroll to top */}
+            {/* Vertical right-edge scroll bar */}
+            <div className={styles.vertTrack} aria-hidden="true">
+                <div
+                    className={styles.vertBar}
+                    style={{ height: `${progress}%` }}
+                />
+            </div>
+
+            {/* Scroll to top button */}
             <button
                 className={`${styles.scrollTop} ${showTop ? styles.visible : ''}`}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

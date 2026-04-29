@@ -23,6 +23,9 @@ export default function Background3D() {
 
         const init = async () => {
             try {
+                // Skip on mobile / low-power — biggest performance win
+                if (window.innerWidth < 768) return;
+
                 const THREE = await import('three');
                 if (cleanup) return;
 
@@ -30,8 +33,10 @@ export default function Background3D() {
                 const h = window.innerHeight;
 
                 renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+                // Cap to 1.0 — retina DPR doubles GPU work for minimal visual gain
+                renderer.setPixelRatio(1);
                 renderer.setSize(w, h);
+
 
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 200);
@@ -50,8 +55,9 @@ export default function Background3D() {
                 const color1 = new THREE.Color(0x4A90D9); // Icy Blue
                 const color2 = new THREE.Color(0x2ECC8A); // Jade accent
 
-                /* ── Seed N shapes ── */
-                const N = 42;
+                /* ── Seed N shapes — reduced from 42 to 18 for performance ── */
+                const N = 18;
+
                 type ShapeData = {
                     mesh: import('three').Mesh;
                     speedRot: import('three').Vector3;

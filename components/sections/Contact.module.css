@@ -38,8 +38,8 @@
 }
 
 .outline {
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.3);
-    color: transparent;
+    font-style: italic;
+    color: var(--c-accent);
 }
 
 .accentDot {
@@ -487,29 +487,54 @@
 @media (max-width: 900px) {
     .grid {
         grid-template-columns: 1fr;
-        gap: 56px;
+        gap: 48px;
     }
 }
 
-@media (max-width: 560px) {
-    .form {
-        padding: 28px 20px;
+@media (max-width: 640px) {
+    /* Extra bottom padding so the form clears the fixed
+       footer bar + floating buttons (chatbot, scroll-top, contact) */
+    .contact {
+        padding-bottom: 120px;
     }
 
+    /* Prevent form box from touching screen edges */
+    .formBox {
+        margin: 0 2px;
+    }
+
+    .form {
+        padding: 24px 18px 28px;
+    }
+
+    /* Stack name/email side-by-side row to single column */
     .row {
         grid-template-columns: 1fr;
     }
 
-    .dialSelect {
-        width: 160px;
-    }
-
+    /* Stack country code + phone number vertically */
     .phoneRow {
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 10px;
     }
 
-    .dialSelect,
+    .dialSelect {
+        width: 100%;
+    }
+
     .phoneInput {
         width: 100%;
+    }
+
+    /* Submit button full-width on mobile */
+    .submit {
+        width: 100%;
+        justify-content: center;
+        padding: 15px 24px;
+    }
+
+    .headline {
+        font-size: 2.4rem;
+        margin-bottom: 28px;
     }
 }

@@ -4,16 +4,20 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
+import dynamic from 'next/dynamic';
+
+const LiveClock = dynamic(() => import('./LiveClock'), { ssr: false });
+
 
 const anchorLinks = [
-    { href: '#home', label: 'Home' },
-    { href: '#about', label: 'About' },
-    { href: '#services', label: 'Services' },
-    { href: '#skills', label: 'Skills' },
-    { href: '#projects', label: 'Projects' },
-    { href: '#research', label: 'Research' },
+    { href: '#home',      label: 'Home' },
+    { href: '#about',     label: 'About' },
+    { href: '#projects',  label: 'Projects' },
+    { href: '#services',  label: 'Services' },
+    { href: '#skills',    label: 'Skills' },
+    { href: '#research',  label: 'Research' },
     { href: '#education', label: 'Education' },
-    { href: '#contact', label: 'Contact' },
+    { href: '#contact',   label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -97,7 +101,10 @@ export default function Navbar() {
                         </li>
                     </ul>
 
-                    {/* Hamburger */}
+                    {/* Live clock — desktop only */}
+                    <span className={styles.clockWrap}><LiveClock /></span>
+
+                    {/* Hamburger — mobile only */}
                     <button
                         className={`${styles.burger} ${open ? styles.burgerOpen : ''}`}
                         onClick={() => setOpen(o => !o)}

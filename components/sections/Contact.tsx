@@ -1,8 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import emailjs from '@emailjs/browser';
 import styles from './Contact.module.css';
+import Magnetic from '@/components/ui/Magnetic';
+
+const FloatingShape = lazy(() => import('./FloatingShape'));
+
 
 const EJS_SERVICE = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID ?? 'YOUR_SERVICE_ID';
 const EJS_TEMPLATE = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID ?? 'YOUR_TEMPLATE_ID';
@@ -377,7 +381,27 @@ export default function Contact() {
             {/* Particle network background */}
             <canvas ref={canvasRef} className={styles.particleCanvas} aria-hidden="true" />
 
+            {/* FloatingShape icosahedron — bottom-left accent */}
+            <Suspense fallback={null}>
+                <div
+                    aria-hidden="true"
+                    style={{
+                        position: 'absolute',
+                        bottom: '-80px',
+                        left: '-80px',
+                        width: '360px',
+                        height: '360px',
+                        pointerEvents: 'none',
+                        opacity: 0.45,
+                        zIndex: 0,
+                    }}
+                >
+                    <FloatingShape variant="ico" cameraZ={4} />
+                </div>
+            </Suspense>
+
             <div className="wrap" style={{ position: 'relative', zIndex: 1 }}>
+
                 <div className={`s-label ${vis ? 'reveal in' : 'reveal'}`}>
                     <span>06</span>Contact
                 </div>
@@ -500,17 +524,20 @@ export default function Contact() {
                                     </div>
 
                                     {/* Submit */}
-                                    <button
-                                        type="submit"
-                                        data-contact-field
-                                        className={`${styles.submit} ${status === 'sending' ? styles.sending : ''} ${status === 'error' ? styles.errorBtn : ''}`}
-                                        disabled={status === 'sending' || status === 'success'}
-                                    >
-                                        {status === 'idle' && <><span>Send Message</span><svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg></>}
-                                        {status === 'sending' && <><span>Sending…</span><span className={styles.spinner} /></>}
-                                        {status === 'success' && <span>✓ Sent!</span>}
-                                        {status === 'error' && <span>✗ Failed — try email</span>}
-                                    </button>
+                                    <Magnetic strength={0.25}>
+                                        <button
+                                            type="submit"
+                                            data-contact-field
+                                            className={`${styles.submit} ${status === 'sending' ? styles.sending : ''} ${status === 'error' ? styles.errorBtn : ''}`}
+                                            disabled={status === 'sending' || status === 'success'}
+                                        >
+                                            {status === 'idle' && <><span>Send Message</span><svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg></>}
+                                            {status === 'sending' && <><span>Sending…</span><span className={styles.spinner} /></>}
+                                            {status === 'success' && <span>✓ Sent!</span>}
+                                            {status === 'error' && <span>✗ Failed — try email</span>}
+                                        </button>
+                                    </Magnetic>
+
                                 </form>
                             </div>{/* /formBoxInner */}
                         </div>

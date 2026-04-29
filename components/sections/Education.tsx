@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import styles from './Education.module.css';
+import CertMarquee from './CertMarquee';
 
 const education = [{
     degree: 'B.Sc. (Engg.) in Computer Science & Engineering',
@@ -124,6 +125,14 @@ export default function Education() {
                         </li>
                     ))}
                 </ul>
+
+                {/* Scrolling certificate marquee */}
+                <div style={{ marginTop: '56px' }}>
+                    <div className={`s-label ${vis ? 'reveal in' : 'reveal'}`} style={{ transitionDelay: '0.3s', marginBottom: '32px' }}>
+                        <span>Certifications Gallery</span>
+                    </div>
+                    <CertMarquee />
+                </div>
             </div>
         </section>
     );

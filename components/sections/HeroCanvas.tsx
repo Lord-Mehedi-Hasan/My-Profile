@@ -15,8 +15,8 @@ export default function HeroCanvas() {
         const W = mount.clientWidth;
         const H = mount.clientHeight;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+        renderer.setPixelRatio(1);
         renderer.setSize(W, H);
         renderer.setClearColor(0x000000, 0);
         mount.appendChild(renderer.domElement);
@@ -110,34 +110,38 @@ export default function HeroCanvas() {
             void main() {
                 vec3 n = normalize(vNormal);
 
-                // Base dark metallic tone
+                // Base — original dark metallic (first color used for this animation)
                 vec3 base  = vec3(0.06, 0.06, 0.07);
 
-                // Rim light — Icy Blue accent
-                float rim  = pow(1.0 - abs(dot(n, vec3(0.0, 0.0, 1.0))), 3.2);
-                vec3 rimColor = vec3(0.29, 0.565, 0.851) * rim * 2.0; // #4A90D9 Icy Blue
+                // Rim light — strong Icy Blue accent
+                float rim  = pow(1.0 - abs(dot(n, vec3(0.0, 0.0, 1.0))), 2.4);
+                vec3 rimColor = vec3(0.29, 0.565, 0.851) * rim * 3.2; // #4A90D9
 
-                // Ambient light shimmer
-                float shim = 0.5 + 0.5 * sin(vPosition.y * 3.0 + uTime * 0.6);
-                vec3 shimColor = vec3(0.9, 0.9, 1.0) * shim * 0.12;
+                // Emerald secondary rim from bottom-left
+                float rim2 = pow(max(0.0, dot(n, normalize(vec3(-0.6, -0.5, 0.5)))), 3.0);
+                vec3 rim2Color = vec3(0.18, 0.80, 0.54) * rim2 * 1.2; // #2ECC8A
 
-                // Fresnel
-                float fres = pow(rim, 1.5) * 0.4;
-                vec3 fresColor = vec3(1.0) * fres;
+                // Animated shimmer across surface
+                float shim = 0.5 + 0.5 * sin(vPosition.y * 3.5 + uTime * 0.7);
+                vec3 shimColor = vec3(0.85, 0.9, 1.0) * shim * 0.22;
+
+                // Fresnel halo
+                float fres = pow(rim, 1.2) * 0.55;
+                vec3 fresColor = vec3(0.6, 0.78, 1.0) * fres;
 
                 // Mouse-reactive highlight
                 vec2 mDir = normalize(uMouse + 0.001);
                 float mHigh = max(0.0, dot(n.xy, mDir));
-                vec3 mouseHL = vec3(0.3) * pow(mHigh, 4.0);
+                vec3 mouseHL = vec3(0.4, 0.6, 1.0) * pow(mHigh, 3.5) * 0.6;
 
-                vec3 col = base + rimColor + shimColor + fresColor + mouseHL;
+                vec3 col = base + rimColor + rim2Color + shimColor + fresColor + mouseHL;
 
-                // Subtle chromatic aberration vignette at edges
-                float vign = smoothstep(1.0, 0.3, length(vUv - 0.5));
-                col *= mix(0.5, 1.0, vign);
+                // Vignette — darken center slightly for depth
+                float vign = smoothstep(1.0, 0.25, length(vUv - 0.5));
+                col *= mix(0.65, 1.0, vign);
 
-                // Slight transparency on edges for depth
-                float alpha = mix(0.5, 1.0, vign) * (0.82 + rim * 0.18);
+                // Transparent at edges for soft integration
+                float alpha = mix(0.3, 0.96, vign) * (0.88 + rim * 0.12);
                 gl_FragColor = vec4(col, alpha);
             }
         `;
@@ -147,8 +151,8 @@ export default function HeroCanvas() {
             uMouse: { value: new THREE.Vector2(0, 0) },
         };
 
-        /* ── Geometry: high-poly sphere (icosahedron-style subdivided) ── */
-        const geo = new THREE.SphereGeometry(1.5, 128, 128);
+        /* ── Geometry: 48×48 — good quality at minimal cost ── */
+        const geo = new THREE.SphereGeometry(1.5, 48, 48);
 
         const mat = new THREE.ShaderMaterial({
             vertexShader,
@@ -168,7 +172,8 @@ export default function HeroCanvas() {
             transparent: true,
             opacity: 0.06,
         });
-        const wireMesh = new THREE.Mesh(new THREE.SphereGeometry(1.51, 32, 32), wireMat);
+        const wireMesh = new THREE.Mesh(new THREE.SphereGeometry(1.51, 20, 20), wireMat);
+
         scene.add(wireMesh);
 
         /* ── Outer glow ring ─────────────────────────── */
@@ -203,12 +208,16 @@ export default function HeroCanvas() {
         };
         window.addEventListener('resize', onResize);
 
-        /* ── Animation loop ──────────────────────────── */
+        /* ── Animation loop — throttled to ~30fps via frame skip ── */
         let raf: number;
+        let frameCount = 0;
         const clock = new THREE.Clock();
 
         const animate = () => {
             raf = requestAnimationFrame(animate);
+            frameCount++;
+            // Skip every other frame → ~30fps render, ~60fps scheduling
+            if (frameCount % 2 !== 0) return;
             const t = clock.getElapsedTime();
 
             // Smooth mouse lerp

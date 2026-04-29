@@ -1,5 +1,38 @@
 .edu {
     background: var(--c-bg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Slow-rotating conic halo ─────────────── */
+.edu::before {
+    content: '';
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(74,144,217,0.06) 60deg,
+        rgba(196,154,60,0.05) 120deg,
+        transparent 180deg,
+        rgba(46,204,138,0.04) 240deg,
+        rgba(74,144,217,0.06) 300deg,
+        transparent 360deg
+    );
+    border-radius: 50%;
+    animation: conicSpin 40s linear infinite;
+    filter: blur(2px);
+}
+
+@keyframes conicSpin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .title {

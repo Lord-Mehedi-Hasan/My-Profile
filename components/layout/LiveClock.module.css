@@ -1,0 +1,27 @@
+.clock {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-m);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    white-space: nowrap;
+    user-select: none;
+}
+
+.tz {
+    font-size: 0.52rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.time {
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+}
+
+@media (max-width: 900px) {
+    .clock { display: none; }
+}

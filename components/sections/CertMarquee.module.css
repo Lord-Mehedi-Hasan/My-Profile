@@ -1,0 +1,154 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.marqueeContainer {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.track {
+  display: flex;
+  gap: 20px;
+  animation: marqueeSlide 30s linear infinite;
+  width: max-content;
+}
+
+.trackPaused {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeSlide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); }
+}
+
+/* ============================================
+   CARD
+   ============================================ */
+.card {
+  width: 280px;
+  flex-shrink: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-left: 3px solid var(--cert-c, var(--c-accent));
+  border-radius: var(--r-md);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon {
+  font-size: 1.4rem;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  border: 1px solid;
+  border-radius: var(--r-full);
+  padding: 2px 8px;
+  font-family: var(--font-m);
+}
+
+.title {
+  font-family: var(--font-h);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.35;
+  flex: 1;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.issuer {
+  font-size: 0.78rem;
+  color: var(--text-3);
+}
+
+.year {
+  font-family: var(--font-m);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ============================================
+   CONTROLS
+   ============================================ */
+.controls {
+  display: flex;
+  justify-content: center;
+}
+
+.autoBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-m);
+  font-size: 0.8rem;
+  color: var(--text-2);
+  background: transparent;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-full);
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+
+.autoBtn:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.autoBtnActive {
+  border-color: rgba(74, 144, 217, 0.5);
+  color: var(--c-accent);
+}
+
+.autoDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-accent);
+  animation: none;
+}
+
+.autoBtnActive .autoDot {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 4px var(--c-accent); }
+  50% { box-shadow: 0 0 12px var(--c-accent); }
+}
