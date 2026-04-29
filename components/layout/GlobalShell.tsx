@@ -18,13 +18,14 @@ export default function GlobalShell({ children }: { children: React.ReactNode })
         const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReduced) return;
 
-        let lenisInstance: import('lenis').default | null = null;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let lenisInstance: any = null;
         let raf: number;
         let destroyed = false;
 
         import('lenis').then(({ default: Lenis }) => {
             if (destroyed) return;
-            lenisInstance = new Lenis({
+            lenisInstance = new (Lenis as any)({
                 duration: 1.4,
                 easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                 smoothWheel: true,
@@ -34,7 +35,7 @@ export default function GlobalShell({ children }: { children: React.ReactNode })
             });
 
             // Expose lenis on window so other components can hook into it
-            (window as Window & { __lenis?: typeof lenisInstance }).lenis = lenisInstance;
+            (window as Window & { lenis?: unknown }).lenis = lenisInstance;
 
             const loop = (time: number) => {
                 lenisInstance?.raf(time);
